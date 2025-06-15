@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
-import GameScene from './GameScene'
+import ElderHouseScene from './scenes/ElderHouseScene'
+import WorldScene from './scenes/WorldScene'
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -13,7 +14,7 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: false
     }
   },
-  scene: [GameScene]
+  scene: [ElderHouseScene, WorldScene]
 }
 
 export default new Phaser.Game(config)
