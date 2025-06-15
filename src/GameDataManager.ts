@@ -6,7 +6,8 @@ export const gameData = {
       tileSize: 32,
       scenery: [
         { type: 'table', x: 4, y: 4 },
-        { type: 'door', x: 9, y: 7 }
+        { type: 'door', x: 9, y: 7 },
+        { type: 'tree', x: 2, y: 2 }
       ]
     }
   },

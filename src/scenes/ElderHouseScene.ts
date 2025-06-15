@@ -2,7 +2,7 @@ import Phaser from 'phaser'
 import gameData from '../GameDataManager'
 
 export default class ElderHouseScene extends Phaser.Scene {
-  private player!: Phaser.GameObjects.Rectangle
+  private player!: Phaser.Physics.Arcade.Sprite
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private interactKey!: Phaser.Input.Keyboard.Key
   private door?: Phaser.GameObjects.Rectangle
@@ -11,7 +11,10 @@ export default class ElderHouseScene extends Phaser.Scene {
     super('elder-house')
   }
 
-  preload() {}
+  preload() {
+    this.load.image('character', 'Character.png')
+    this.load.image('base', 'Base.png')
+  }
 
   create() {
     const map = gameData.maps.elder_house
@@ -22,12 +25,10 @@ export default class ElderHouseScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, width, height)
     this.physics.world.setBounds(0, 0, width, height)
 
-    // simple floor
-    this.add.rectangle(width / 2, height / 2, width, height, 0x888888)
+    this.add.tileSprite(width / 2, height / 2, width, height, 'base')
 
-    // create player
-    this.player = this.add.rectangle(tileSize * 2, tileSize * 6, tileSize, tileSize, 0x00ff00)
-    this.physics.add.existing(this.player)
+    this.player = this.physics.add.sprite(tileSize * 2, tileSize * 6, 'character')
+    this.player.setScale(tileSize / 128)
     const body = this.player.body as Phaser.Physics.Arcade.Body
     body.setCollideWorldBounds(true)
 
