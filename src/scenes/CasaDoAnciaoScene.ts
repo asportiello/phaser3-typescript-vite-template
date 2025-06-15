@@ -2,8 +2,8 @@ import Phaser from 'phaser'
 import gameData from '../GameDataManager'
 
 export default class CasaDoAnciaoScene extends Phaser.Scene {
-  private player!: Phaser.GameObjects.Rectangle
-  private npc!: Phaser.GameObjects.Rectangle
+  private player!: Phaser.Physics.Arcade.Sprite
+  private npc!: Phaser.Physics.Arcade.Sprite
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private interactKey!: Phaser.Input.Keyboard.Key
   private newDoor?: Phaser.GameObjects.Rectangle
@@ -19,7 +19,12 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
     super('casa-do-anciao')
   }
 
-  preload() {}
+  preload() {
+    this.load.image('character', 'Character.png')
+    this.load.image('elder', 'elder.png')
+    this.load.image('base', 'Base.png')
+    this.load.image('tree', 'Tree.png')
+  }
 
   create() {
     const map = gameData.maps.elder_house
@@ -30,21 +35,23 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, width, height)
     this.physics.world.setBounds(0, 0, width, height)
 
-    this.add.rectangle(width / 2, height / 2, width, height, 0x888888)
+    this.add.tileSprite(width / 2, height / 2, width, height, 'base')
 
-    this.player = this.add.rectangle(tileSize * 2, tileSize * 6, tileSize, tileSize, 0x00ff00)
-    this.physics.add.existing(this.player)
-    const body = this.player.body as Phaser.Physics.Arcade.Body
-    body.setCollideWorldBounds(true)
+    this.player = this.physics.add.sprite(tileSize * 2, tileSize * 6, 'character')
+    this.player.setScale(tileSize / 128)
+    this.player.setCollideWorldBounds(true)
 
-    this.npc = this.add.rectangle(tileSize * 5, tileSize * 3, tileSize, tileSize * 2, 0x5555ff)
-    this.physics.add.existing(this.npc, true)
+    this.npc = this.physics.add.staticSprite(tileSize * 5, tileSize * 3, 'elder')
+    this.npc.setScale(tileSize / 1024, (tileSize * 2) / 1024)
+    this.npc.refreshBody()
 
     map.scenery.forEach(obj => {
       const x = obj.x * tileSize + tileSize / 2
       const y = obj.y * tileSize + tileSize / 2
       if (obj.type === 'table') {
         this.add.rectangle(x, y, tileSize * 2, tileSize, 0x664422)
+      } else if (obj.type === 'tree') {
+        this.add.image(x, y, 'tree').setScale(tileSize / 64)
       }
     })
 
