@@ -36,8 +36,8 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
     this.tileSize = tileSize
 
     map.createLayer('Ground', tileset)
-    const paredesLayer = map.createLayer('Furniture', tileset)
-    paredesLayer.setCollisionByExclusion([-1])
+    const furnitureLayer = map.createLayer('Furniture', tileset)
+    furnitureLayer.setCollisionByExclusion([-1])
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
@@ -45,7 +45,7 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
     this.player = this.physics.add.sprite(map.tileWidth * 2, map.tileHeight * 6, 'player_sprite')
     this.player.setScale(map.tileWidth / 32)
     this.player.setCollideWorldBounds(true)
-    this.physics.add.collider(this.player, paredesLayer)
+    this.physics.add.collider(this.player, furnitureLayer)
 
     this.anims.create({
       key: 'walk-down',
