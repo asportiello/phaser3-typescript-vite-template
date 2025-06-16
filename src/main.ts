@@ -4,6 +4,7 @@ import PreloadScene from './scenes/PreloadScene'
 import UIScene from './scenes/UIScene'
 import VinhedoScene from './scenes/VinhedoScene'
 import WorldScene from './scenes/WorldScene'
+import GameScene from './GameScene'
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -17,7 +18,7 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: false
     }
   },
-  scene: [PreloadScene, CasaDoAnciaoScene, UIScene, VinhedoScene, WorldScene]
+  scene: [PreloadScene, GameScene, CasaDoAnciaoScene, UIScene, VinhedoScene, WorldScene]
 }
 
 export default new Phaser.Game(config)
