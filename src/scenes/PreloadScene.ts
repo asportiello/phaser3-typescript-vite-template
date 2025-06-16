@@ -17,7 +17,6 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('tiles', 'Tiles.png')
     this.load.image('tree', 'Tree.png')
     this.load.image('elder', 'elder.png')
-    this.load.tilemapTiledJSON('house', 'home-inside.tmj')
   }
 
   create() {
