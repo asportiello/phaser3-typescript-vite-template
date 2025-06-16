@@ -84,6 +84,16 @@ export default class GameScene extends Phaser.Scene {
       this.player.anims.play('walk-left', true)
     } else {
       this.player.anims.stop()
+      const last = this.player.anims.currentAnim?.key
+      if (last === 'walk-down') {
+        this.player.setFrame(0)
+      } else if (last === 'walk-left') {
+        this.player.setFrame(4)
+      } else if (last === 'walk-right') {
+        this.player.setFrame(8)
+      } else if (last === 'walk-up') {
+        this.player.setFrame(12)
+      }
     }
   }
 }
