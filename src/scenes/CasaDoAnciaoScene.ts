@@ -8,6 +8,7 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
   private newDoor?: Phaser.GameObjects.Rectangle
   private uiScene!: Phaser.Scene
   private tileSize = 16
+  private debugGraphics?: Phaser.GameObjects.Graphics
 
   private npcData = {
     question: 'Qual \u00e9 a palavra secreta?',
@@ -37,15 +38,29 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
 
     map.createLayer('Ground', tileset)
     const furnitureLayer = map.createLayer('Furniture', tileset)
-    furnitureLayer.setCollisionByExclusion([-1])
+    furnitureLayer.setCollisionByExclusion([0])
+    // convert tilemap layer into Arcade bodies (not in typings)
+    // @ts-ignore
+    this.physics.world.convertTilemapLayer(furnitureLayer)
 
     this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
 
-    this.player = this.physics.add.sprite(map.tileWidth * 2, map.tileHeight * 6, 'player_sprite')
-    this.player.setScale(map.tileWidth / 32)
+    this.player = this.physics.add
+      .sprite(map.tileWidth * 2, map.tileHeight * 6, 'player_sprite')
+      .setScale(map.tileWidth / 32)
+    const playerBody = this.player.body as Phaser.Physics.Arcade.Body
+    playerBody.setSize(map.tileWidth, map.tileWidth).setOffset(0, 0)
     this.player.setCollideWorldBounds(true)
     this.physics.add.collider(this.player, furnitureLayer)
+
+    // Debug visualization for collision tiles
+    this.debugGraphics = this.add.graphics().setAlpha(0.6)
+    furnitureLayer.renderDebug(this.debugGraphics, {
+      tileColor: null,
+      collidingTileColor: new Phaser.Display.Color(255, 0, 0),
+      faceColor: new Phaser.Display.Color(0, 255, 0),
+    })
 
     this.anims.create({
       key: 'walk-down',
