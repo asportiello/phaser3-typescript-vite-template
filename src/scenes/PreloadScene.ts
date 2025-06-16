@@ -8,6 +8,10 @@ export default class PreloadScene extends Phaser.Scene {
   preload() {
     this.load.image('base', 'Base.png')
     this.load.image('character', 'Character.png')
+    this.load.spritesheet('player_sprite', 'Character.png', {
+      frameWidth: 32,
+      frameHeight: 32
+    })
     this.load.image('house', 'House.png')
     this.load.image('tiles', 'Tiles.png')
     this.load.image('tree', 'Tree.png')

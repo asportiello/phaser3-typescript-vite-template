@@ -20,6 +20,10 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
   }
 
   preload() {
+    this.load.spritesheet('player_sprite', 'Character.png', {
+      frameWidth: 32,
+      frameHeight: 32
+    })
     this.load.image('character', 'Character.png')
     this.load.image('elder', 'elder.png')
     this.load.image('base', 'Base.png')
@@ -37,9 +41,34 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
 
     this.add.tileSprite(width / 2, height / 2, width, height, 'base')
 
-    this.player = this.physics.add.sprite(tileSize * 2, tileSize * 6, 'character')
-    this.player.setScale(tileSize / 128)
+    this.player = this.physics.add.sprite(tileSize * 2, tileSize * 6, 'player_sprite')
+    this.player.setScale(tileSize / 32)
     this.player.setCollideWorldBounds(true)
+
+    this.anims.create({
+      key: 'walk-down',
+      frames: this.anims.generateFrameNumbers('player_sprite', { start: 0, end: 3 }),
+      frameRate: 10,
+      repeat: -1
+    })
+    this.anims.create({
+      key: 'walk-left',
+      frames: this.anims.generateFrameNumbers('player_sprite', { start: 4, end: 7 }),
+      frameRate: 10,
+      repeat: -1
+    })
+    this.anims.create({
+      key: 'walk-right',
+      frames: this.anims.generateFrameNumbers('player_sprite', { start: 8, end: 11 }),
+      frameRate: 10,
+      repeat: -1
+    })
+    this.anims.create({
+      key: 'walk-up',
+      frames: this.anims.generateFrameNumbers('player_sprite', { start: 12, end: 15 }),
+      frameRate: 10,
+      repeat: -1
+    })
 
     this.npc = this.physics.add.staticSprite(tileSize * 5, tileSize * 3, 'elder')
     this.npc.setScale(tileSize / 1024, (tileSize * 2) / 1024)
@@ -71,13 +100,19 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
 
     if (this.cursors.left?.isDown) {
       body.setVelocityX(-150)
+      this.player.anims.play('walk-left', true)
     } else if (this.cursors.right?.isDown) {
       body.setVelocityX(150)
-    }
-    if (this.cursors.up?.isDown) {
+      this.player.anims.play('walk-right', true)
+    } else if (this.cursors.up?.isDown) {
       body.setVelocityY(-150)
+      this.player.anims.play('walk-up', true)
     } else if (this.cursors.down?.isDown) {
       body.setVelocityY(150)
+      this.player.anims.play('walk-down', true)
+    } else {
+      this.player.anims.stop()
+      this.player.setFrame(0)
     }
 
     const dist = Phaser.Math.Distance.Between(this.player.x, this.player.y, this.npc.x, this.npc.y)
