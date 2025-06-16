@@ -17,21 +17,18 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    const width = this.scale.width
-    const height = this.scale.height
+    const width = 240
+    const height = 160
 
     this.cameras.main.setBounds(0, 0, width, height)
     this.physics.world.setBounds(0, 0, width, height)
 
-    this.add.tileSprite(width / 2, height / 2, width, height, 'base')
+    this.add.image(width / 2, height / 2, 'inside-house')
 
     this.player = this.physics.add.sprite(width / 2, height / 2, 'player_sprite')
     this.player.setCollideWorldBounds(true)
 
-    // simple furniture
-    this.add.rectangle(width / 2, height - 40, 64, 64, 0x222222)
-    this.add.rectangle(width / 2 - 100, height / 2 + 50, 80, 40, 0x664422)
-    this.add.rectangle(width / 2 + 100, height / 2 + 50, 80, 40, 0x664422)
+    // interior dimensions match the inside-house image
 
     this.cursors = this.input.keyboard.createCursorKeys()
 

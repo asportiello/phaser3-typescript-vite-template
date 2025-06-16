@@ -12,6 +12,7 @@ export default class PreloadScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     })
+    this.load.image('inside-house', 'inside-house.png')
     this.load.image('house', 'House.png')
     this.load.image('tiles', 'Tiles.png')
     this.load.image('tree', 'Tree.png')
