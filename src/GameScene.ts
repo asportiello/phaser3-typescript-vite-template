@@ -10,80 +10,80 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.spritesheet('player_sprite', 'Character.png', {
+    // Carrega a spritesheet e a imagem de fundo da casa
+    this.load.spritesheet('player_sprite', 'assets/Character.png', {
       frameWidth: 32,
       frameHeight: 32
     })
+    this.load.image('inside-house', 'assets/House.png')
   }
 
   create() {
-    const width = 240
-    const height = 160
+    // Fundo da cena
+    this.add.image(0, 0, 'inside-house').setOrigin(0, 0)
 
-    this.cameras.main.setBounds(0, 0, width, height)
-    this.physics.world.setBounds(0, 0, width, height)
+    // Jogador
+    this.player = this.physics.add.sprite(128, 128, 'player_sprite')
 
-    this.add.image(width / 2, height / 2, 'inside-house')
-
-    this.player = this.physics.add.sprite(width / 2, height / 2, 'player_sprite')
+    // Limites de colisão e mundo
+    this.physics.world.setBounds(0, 0, 240, 160)
     this.player.setCollideWorldBounds(true)
+    this.cameras.main.setBounds(0, 0, 240, 160)
 
-    // interior dimensions match the inside-house image
-
+    // Controles
     this.cursors = this.input.keyboard.createCursorKeys()
 
     this.anims.create({
       key: 'walk-down',
       frames: this.anims.generateFrameNumbers('player_sprite', { start: 0, end: 3 }),
-      frameRate: 10,
-      repeat: -1
-    })
-    this.anims.create({
-      key: 'walk-up',
-      frames: this.anims.generateFrameNumbers('player_sprite', { start: 4, end: 7 }),
-      frameRate: 10,
+      frameRate: 8,
       repeat: -1
     })
     this.anims.create({
       key: 'walk-left',
-      frames: this.anims.generateFrameNumbers('player_sprite', { start: 8, end: 11 }),
-      frameRate: 10,
+      frames: this.anims.generateFrameNumbers('player_sprite', { start: 4, end: 7 }),
+      frameRate: 8,
       repeat: -1
     })
     this.anims.create({
       key: 'walk-right',
+      frames: this.anims.generateFrameNumbers('player_sprite', { start: 8, end: 11 }),
+      frameRate: 8,
+      repeat: -1
+    })
+    this.anims.create({
+      key: 'walk-up',
       frames: this.anims.generateFrameNumbers('player_sprite', { start: 12, end: 15 }),
-      frameRate: 10,
+      frameRate: 8,
       repeat: -1
     })
 
-    this.cameras.main.startFollow(this.player)
+    this.cameras.main.startFollow(this.player, true)
   }
 
   update() {
     const body = this.player.body as Phaser.Physics.Arcade.Body
 
-    // 1. Reset current velocity
+    // 1. Reseta a velocidade
     this.player.setVelocity(0)
 
-    // 2. Horizontal movement
+    // 2. Calcula movimento horizontal e vertical independentemente
     if (this.cursors.left?.isDown) {
-      body.velocity.x = -this.speed
+      this.player.setVelocityX(-this.speed)
     } else if (this.cursors.right?.isDown) {
-      body.velocity.x = this.speed
+      this.player.setVelocityX(this.speed)
     }
 
-    // 3. Vertical movement
     if (this.cursors.up?.isDown) {
-      body.velocity.y = -this.speed
+      this.player.setVelocityY(-this.speed)
     } else if (this.cursors.down?.isDown) {
-      body.velocity.y = this.speed
+      this.player.setVelocityY(this.speed)
     }
 
-    // 4. Normalize diagonal movement
-    body.velocity.normalize().scale(this.speed)
+    // 3. Normaliza a velocidade para movimento diagonal consistente
+    this.player.body.velocity.normalize().scale(this.speed)
 
-    // 5. Decide which animation to play
+    // 4. Lógica de animação correta
     if (body.velocity.y > 0) {
       this.player.anims.play('walk-down', true)
     } else if (body.velocity.y < 0) {
