@@ -52,23 +52,38 @@ export default class GameScene extends Phaser.Scene {
 
   update() {
     const body = this.player.body as Phaser.Physics.Arcade.Body
-    body.setVelocity(0)
 
+    // 1. Reset current velocity
+    this.player.setVelocity(0)
+
+    // 2. Horizontal movement
     if (this.cursors.left?.isDown) {
-      body.setVelocityX(-this.speed)
-      this.player.anims.play('walk-left', true)
+      body.velocity.x = -this.speed
     } else if (this.cursors.right?.isDown) {
-      body.setVelocityX(this.speed)
-      this.player.anims.play('walk-right', true)
-    } else if (this.cursors.up?.isDown) {
-      body.setVelocityY(-this.speed)
-      this.player.anims.play('walk-up', true)
+      body.velocity.x = this.speed
+    }
+
+    // 3. Vertical movement
+    if (this.cursors.up?.isDown) {
+      body.velocity.y = -this.speed
     } else if (this.cursors.down?.isDown) {
-      body.setVelocityY(this.speed)
+      body.velocity.y = this.speed
+    }
+
+    // 4. Normalize diagonal movement
+    body.velocity.normalize().scale(this.speed)
+
+    // 5. Decide which animation to play
+    if (body.velocity.y > 0) {
       this.player.anims.play('walk-down', true)
+    } else if (body.velocity.y < 0) {
+      this.player.anims.play('walk-up', true)
+    } else if (body.velocity.x > 0) {
+      this.player.anims.play('walk-right', true)
+    } else if (body.velocity.x < 0) {
+      this.player.anims.play('walk-left', true)
     } else {
       this.player.anims.stop()
-      this.player.setFrame(0)
     }
   }
 }
