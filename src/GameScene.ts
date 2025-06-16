@@ -17,6 +17,7 @@ export default class GameScene extends Phaser.Scene {
   private player!: Phaser.Physics.Arcade.Sprite
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private speed = 150
+  private obstacles!: Phaser.Physics.Arcade.StaticGroup
 
   constructor() {
     super('game')
@@ -24,13 +25,13 @@ export default class GameScene extends Phaser.Scene {
 
   preload() {
     // Load player sprite sheet
-    this.load.spritesheet('player_sprite', 'assets/Character.png', {
+    this.load.spritesheet('player_sprite', 'Character.png', {
       frameWidth: 32,
       frameHeight: 32,
     })
 
     // Load background image
-    this.load.image('inside-house', 'assets/House.png')
+    this.load.image('inside-house', 'inside-house.png')
   }
 
   create() {
@@ -49,6 +50,32 @@ export default class GameScene extends Phaser.Scene {
 
     // Keyboard controls
     this.cursors = this.input.keyboard.createCursorKeys()
+
+    // -------------------------
+    // 1)  FURNITURE COLLIDERS
+    // -------------------------
+    this.obstacles = this.physics.add.staticGroup()
+
+    const addBlock = (x: number, y: number, w: number, h: number) => {
+      const zone = this.add.zone(x, y, w, h).setOrigin(0)
+      this.physics.add.existing(zone, true)
+      this.obstacles.add(zone)
+      return zone
+    }
+
+    const furnitureLayout: [number, number, number, number][] = [
+      [0, 0, 64, 32],
+      [160, 0, 32, 48],
+      [200, 32, 32, 56],
+      [16, 88, 48, 40],
+      [120, 72, 72, 56],
+      [160, 112, 64, 32],
+      [0, 112, 32, 32],
+    ]
+
+    furnitureLayout.forEach(([x, y, w, h]) => addBlock(x, y, w, h))
+
+    this.physics.add.collider(this.player, this.obstacles)
 
     // -----------------------------------------------------
     // Animation definitions (use non‑contiguous frames!)
