@@ -48,10 +48,29 @@
          "visible":true,
          "width":15,
          "x":0,
+        "y":0
+        },
+        {
+         "draworder":"topdown",
+         "id":4,
+         "name":"Colliders",
+         "objects":[
+                {"height":32,"id":1,"name":"","rotation":0,"type":"","visible":true,"width":64,"x":0,"y":0},
+                {"height":48,"id":2,"name":"","rotation":0,"type":"","visible":true,"width":32,"x":160,"y":0},
+                {"height":56,"id":3,"name":"","rotation":0,"type":"","visible":true,"width":32,"x":200,"y":32},
+                {"height":40,"id":4,"name":"","rotation":0,"type":"","visible":true,"width":48,"x":16,"y":88},
+                {"height":56,"id":5,"name":"","rotation":0,"type":"","visible":true,"width":72,"x":120,"y":72},
+                {"height":32,"id":6,"name":"","rotation":0,"type":"","visible":true,"width":64,"x":160,"y":112},
+                {"height":32,"id":7,"name":"","rotation":0,"type":"","visible":true,"width":32,"x":0,"y":112}
+               ],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
          "y":0
         }],
- "nextlayerid":4,
- "nextobjectid":1,
+ "nextlayerid":5,
+ "nextobjectid":8,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
