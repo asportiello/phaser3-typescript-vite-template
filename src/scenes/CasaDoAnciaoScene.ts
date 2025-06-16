@@ -1,5 +1,4 @@
 import Phaser from 'phaser'
-import gameData from '../GameDataManager'
 
 export default class CasaDoAnciaoScene extends Phaser.Scene {
   private player!: Phaser.Physics.Arcade.Sprite
@@ -8,6 +7,7 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
   private interactKey!: Phaser.Input.Keyboard.Key
   private newDoor?: Phaser.GameObjects.Rectangle
   private uiScene!: Phaser.Scene
+  private tileSize = 16
 
   private npcData = {
     question: 'Qual \u00e9 a palavra secreta?',
@@ -24,26 +24,28 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
       frameWidth: 32,
       frameHeight: 32
     })
-    this.load.image('character', 'Character.png')
     this.load.image('elder', 'elder.png')
-    this.load.image('base', 'Base.png')
-    this.load.image('tree', 'Tree.png')
+    this.load.image('tiles_casa', 'Tiles.png')
+    this.load.tilemapTiledJSON('mapa_casa', 'home-inside.tmj')
   }
 
   create() {
-    const map = gameData.maps.elder_house
-    const tileSize = map.tileSize
-    const width = map.width * tileSize
-    const height = map.height * tileSize
+    const map = this.make.tilemap({ key: 'mapa_casa' })
+    const tileset = map.addTilesetImage('Tiles', 'tiles_casa')
+    const tileSize = map.tileWidth
+    this.tileSize = tileSize
 
-    this.cameras.main.setBounds(0, 0, width, height)
-    this.physics.world.setBounds(0, 0, width, height)
+    map.createLayer('Ground', tileset)
+    const paredesLayer = map.createLayer('Furniture', tileset)
+    paredesLayer.setCollisionByExclusion([-1])
 
-    this.add.tileSprite(width / 2, height / 2, width, height, 'base')
+    this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
+    this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels)
 
-    this.player = this.physics.add.sprite(tileSize * 2, tileSize * 6, 'player_sprite')
-    this.player.setScale(tileSize / 32)
+    this.player = this.physics.add.sprite(map.tileWidth * 2, map.tileHeight * 6, 'player_sprite')
+    this.player.setScale(map.tileWidth / 32)
     this.player.setCollideWorldBounds(true)
+    this.physics.add.collider(this.player, paredesLayer)
 
     this.anims.create({
       key: 'walk-down',
@@ -73,16 +75,6 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
     this.npc = this.physics.add.staticSprite(tileSize * 5, tileSize * 3, 'elder')
     this.npc.setScale(tileSize / 1024, (tileSize * 2) / 1024)
     this.npc.refreshBody()
-
-    map.scenery.forEach(obj => {
-      const x = obj.x * tileSize + tileSize / 2
-      const y = obj.y * tileSize + tileSize / 2
-      if (obj.type === 'table') {
-        this.add.rectangle(x, y, tileSize * 2, tileSize, 0x664422)
-      } else if (obj.type === 'tree') {
-        this.add.image(x, y, 'tree').setScale(tileSize / 64)
-      }
-    })
 
     this.cursors = this.input.keyboard.createCursorKeys()
     this.interactKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E)
@@ -141,8 +133,7 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
 
   private createDoor() {
     if (this.newDoor) return
-    const map = gameData.maps.elder_house
-    const tileSize = map.tileSize
+    const tileSize = this.tileSize
     const x = tileSize * 1.5
     const y = tileSize
     this.newDoor = this.add.rectangle(x, y, tileSize, tileSize * 2, 0xf6e05e)
