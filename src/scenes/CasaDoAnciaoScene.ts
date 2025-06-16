@@ -52,19 +52,19 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
       repeat: -1
     })
     this.anims.create({
-      key: 'walk-left',
+      key: 'walk-up',
       frames: this.anims.generateFrameNumbers('player_sprite', { start: 4, end: 7 }),
       frameRate: 10,
       repeat: -1
     })
     this.anims.create({
-      key: 'walk-right',
+      key: 'walk-left',
       frames: this.anims.generateFrameNumbers('player_sprite', { start: 8, end: 11 }),
       frameRate: 10,
       repeat: -1
     })
     this.anims.create({
-      key: 'walk-up',
+      key: 'walk-right',
       frames: this.anims.generateFrameNumbers('player_sprite', { start: 12, end: 15 }),
       frameRate: 10,
       repeat: -1
@@ -112,7 +112,16 @@ export default class CasaDoAnciaoScene extends Phaser.Scene {
       this.player.anims.play('walk-down', true)
     } else {
       this.player.anims.stop()
-      this.player.setFrame(0)
+      const last = this.player.anims.currentAnim?.key
+      if (last === 'walk-down') {
+        this.player.setFrame(0)
+      } else if (last === 'walk-up') {
+        this.player.setFrame(4)
+      } else if (last === 'walk-left') {
+        this.player.setFrame(8)
+      } else if (last === 'walk-right') {
+        this.player.setFrame(12)
+      }
     }
 
     const dist = Phaser.Math.Distance.Between(this.player.x, this.player.y, this.npc.x, this.npc.y)
