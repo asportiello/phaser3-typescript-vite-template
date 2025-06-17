@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import CasaDoAnciaoScene from './scenes/CasaDoAnciaoScene'
+import CasaScene from './scenes/CasaScene'
 import PreloadScene from './scenes/PreloadScene'
 import UIScene from './scenes/UIScene'
 import VinhedoScene from './scenes/VinhedoScene'
@@ -18,7 +19,7 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: false
     }
   },
-  scene: [PreloadScene, GameScene, CasaDoAnciaoScene, UIScene, VinhedoScene, WorldScene]
+  scene: [PreloadScene, GameScene, CasaScene, CasaDoAnciaoScene, UIScene, VinhedoScene, WorldScene]
 }
 
 export default new Phaser.Game(config)
