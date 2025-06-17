@@ -21,7 +21,7 @@ export default class CasaScene extends Phaser.Scene {
     const furniture = map.createLayer('Furniture', tileset, 0, 0)
 
     // (a) tente cada um separadamente ─ só UM deve ficar ativo
-    furniture.setCollisionByExclusion([0])            // TODO ①
+    furniture.setCollisionByExclusion([-1])            // TODO ①
     // furniture.setCollisionByProperty({ collides:true }) // TODO ②
 
     // Se Phaser < 3.55, descomente a linha abaixo
